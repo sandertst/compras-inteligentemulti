@@ -1,1 +1,205 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Compras Inteligente</title></head><body><h1>App funcionando</h1></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Compras Inteligente</title>
+  <meta name="theme-color" content="#1d4ed8" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="entryScreen" class="entry-screen">
+    <div class="entry-card">
+      <span class="brand-badge dark">Compras Inteligente</span>
+      <h1>Acesse sua lista</h1>
+      <p>Digite o código da família, cliente ou empresa.</p>
+      <input type="text" id="accessCode" placeholder="Ex.: familia-silva" />
+      <input type="text" id="deviceNameEntry" placeholder="Nome deste aparelho" />
+      <button id="btnEntrar" class="btn btn-primary btn-full">Entrar no sistema</button>
+      <p class="entry-tip">O mesmo código em dois celulares abre a mesma lista.</p>
+    </div>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <header class="topbar">
+      <div>
+        <span class="brand-badge">Compras Inteligente</span>
+        <h1>Lista rápida de mercado</h1>
+        <p class="top-subtitle">Código ativo: <strong id="activeListCode">-</strong></p>
+      </div>
+      <div class="topbar-actions">
+        <button id="btnTrocarCodigo" class="btn btn-light">Trocar código</button>
+        <button id="btnInstall" class="btn btn-light hidden">Instalar app</button>
+        <span id="syncStatus" class="sync-pill">Modo local</span>
+      </div>
+    </header>
+
+    <main>
+      <section id="screen-dashboard" class="screen active">
+        <div class="hero-card">
+          <div>
+            <p class="muted">Comece rápido</p>
+            <h2>Dashboard</h2>
+            <p class="hero-text">Abra a compra e veja só o que falta.</p>
+          </div>
+          <button id="btnStartShopping" class="btn btn-primary btn-xl">COMEÇAR COMPRA</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><span class="stat-label">Produtos</span><strong id="statProdutos">0</strong></article>
+          <article class="stat-card"><span class="stat-label">Faltando</span><strong id="statFaltando">0</strong></article>
+          <article class="stat-card"><span class="stat-label">Progresso</span><strong id="statProgresso">0%</strong></article>
+          <article class="stat-card"><span class="stat-label">Total</span><strong>R$ <span id="statTotal">0,00</span></strong></article>
+        </div>
+      </section>
+
+      <section id="screen-market" class="screen">
+        <div class="section-card">
+          <div class="market-top sticky-top">
+            <div class="section-head compact">
+              <div>
+                <p class="muted">Checklist rápido</p>
+                <h2>Modo supermercado</h2>
+              </div>
+              <button id="btnAtualizarMercado" class="btn btn-primary">Atualizar</button>
+            </div>
+
+            <div class="progress-shell"><div id="barra" class="progress-bar">0%</div></div>
+            <p id="listaResumo" class="muted">Preencha o estoque e gere sua lista.</p>
+
+            <div class="market-tools">
+              <input type="text" id="buscaMercado" placeholder="Buscar item..." />
+              <label class="toggle-row">
+                <input type="checkbox" id="toggleOcultarComprados" checked />
+                <span>Ocultar comprados</span>
+              </label>
+            </div>
+
+            <div id="chipsMercado" class="chips"></div>
+          </div>
+
+          <div id="listaCompras" class="shopping-list"></div>
+        </div>
+      </section>
+
+      <section id="screen-products" class="screen">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <p class="muted">Cadastro</p>
+              <h2>Produtos</h2>
+            </div>
+            <div class="inline-actions">
+              <button id="btnSalvar" class="btn btn-light">Salvar</button>
+              <button id="btnRestaurar" class="btn btn-danger">Restaurar</button>
+            </div>
+          </div>
+
+          <div class="add-box">
+            <h3>Novo produto</h3>
+            <div class="add-grid">
+              <input type="text" id="novoNome" placeholder="Nome do produto" />
+              <input type="number" id="novoMinimo" min="0" step="0.01" placeholder="Estoque mínimo" />
+              <input type="text" id="novoUnidade" placeholder="Unidade" />
+              <select id="novaCategoria">
+                <option value="Mercearia">Mercearia</option>
+                <option value="Limpeza">Limpeza</option>
+                <option value="Higiene">Higiene</option>
+                <option value="Frios e Laticínios">Frios e Laticínios</option>
+                <option value="Hortifruti">Hortifruti</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Pet">Pet</option>
+                <option value="Outros">Outros</option>
+              </select>
+              <button id="btnAdicionarProduto" class="btn btn-primary">Adicionar</button>
+            </div>
+          </div>
+
+          <div class="search-box">
+            <input type="text" id="buscaProduto" placeholder="Buscar produto..." />
+            <span id="contadorProdutos" class="muted">0 produtos</span>
+          </div>
+
+          <div id="chipsCategorias" class="chips"></div>
+          <div id="listaProdutos" class="product-cards"></div>
+        </div>
+      </section>
+
+      <section id="screen-family" class="screen">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <p class="muted">Sincronização</p>
+              <h2>Modo família</h2>
+            </div>
+          </div>
+
+          <div class="family-panel">
+            <div class="family-grid">
+              <div>
+                <label class="product-label">Nome deste aparelho</label>
+                <input type="text" id="deviceName" placeholder="Ex.: Celular 1" />
+              </div>
+              <div>
+                <label class="product-label">Código ativo</label>
+                <div class="status-box"><span id="familyCode">-</span></div>
+              </div>
+            </div>
+
+            <div class="family-grid">
+              <div>
+                <label class="product-label">Status</label>
+                <div class="status-box"><span id="familyStatus">Modo local</span></div>
+              </div>
+              <div>
+                <label class="product-label">Trocar código</label>
+                <button id="btnTrocarCodigo2" class="btn btn-light btn-full">Trocar código</button>
+              </div>
+            </div>
+
+            <div id="familyLog" class="family-log"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-calc" class="screen">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <p class="muted">Controle rápido</p>
+              <h2>Calculadora</h2>
+            </div>
+            <button id="btnExportar" class="btn btn-primary">Exportar lista</button>
+          </div>
+
+          <div class="calc-box">
+            <input type="number" step="0.01" min="0" id="valorItem" placeholder="Ex.: 12,90" />
+            <button id="btnAdicionarValor" class="btn btn-primary">Adicionar valor</button>
+          </div>
+
+          <div class="total-card">
+            <span>Total acumulado</span>
+            <strong>R$ <span id="total">0,00</span></strong>
+          </div>
+
+          <button id="btnZerarTotal" class="btn btn-light btn-full">Zerar total</button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-go="dashboard">Home</button>
+      <button class="nav-btn" data-go="market">Compra</button>
+      <button class="nav-btn" data-go="products">Produtos</button>
+      <button class="nav-btn" data-go="family">Família</button>
+      <button class="nav-btn" data-go="calc">Total</button>
+    </nav>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="firebase-config.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

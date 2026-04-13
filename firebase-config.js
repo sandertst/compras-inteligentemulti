@@ -1,1 +1,9 @@
-window.firebaseSettings={enabled:false};
+window.firebaseSettings = {
+  enabled: false,
+  projectId: "",
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  appId: "",
+  defaultListPrefix: "cliente"
+};
