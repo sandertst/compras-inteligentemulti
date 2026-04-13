@@ -1,0 +1,1 @@
+window.firebaseSettings={enabled:false};
